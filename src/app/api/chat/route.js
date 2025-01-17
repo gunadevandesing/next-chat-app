@@ -2,7 +2,6 @@
 import { HumanMessage } from "@langchain/core/messages";
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { ChatMistralAI } from "@langchain/mistralai";
-import MarkdownIt from "markdown-it";
 
 export async function POST(req) {
   // const imgData = imageString;
@@ -43,7 +42,7 @@ export async function POST(req) {
 
   // Read from the stream and interpret the output as markdown
   const buffer = [];
-  const md = new MarkdownIt();
+  // const md = new MarkdownIt();
   let outputRes = "";
   for await (const chunk of streamRes) {
     buffer.push(chunk.content);
