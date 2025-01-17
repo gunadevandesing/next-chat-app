@@ -5,12 +5,12 @@ import SendMessage from "./SendMessage";
 
 const models = [
   {
-    name: "Gemini 1.5 Pro",
-    value: "gemini-1.5-pro",
+    name: "Model 1",
+    value: "g",
   },
   {
-    name: "Mistral AI",
-    value: "mistral-large-latest",
+    name: "Model 2",
+    value: "m",
   },
 ];
 
@@ -31,7 +31,7 @@ const ChatWrapper = () => {
   const [messages, setMessages] = useState([]);
   const scroll = useRef();
   const [loading, setLoading] = useState(false);
-  const modelRef = useRef("gemini-1.5-pro");
+  const modelRef = useRef("g");
 
   const addMessage = async (message) => {
     setMessages((prevMessages) => [
