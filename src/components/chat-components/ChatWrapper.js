@@ -3,13 +3,24 @@ import React, { useState, useRef, useEffect } from "react";
 import Message from "./Message";
 import SendMessage from "./SendMessage";
 
-const getResponse = async (message) => {
+const models = [
+  {
+    name: "Gemini 1.5 Pro",
+    value: "gemini-1.5-pro",
+  },
+  {
+    name: "Mistral AI",
+    value: "mistral-large-latest",
+  },
+];
+
+const getResponse = async (message, modelName) => {
   const response = await fetch(`/api/chat`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ message }),
+    body: JSON.stringify({ message, modelName }),
   });
   const data = await response.json();
   console.log({ data });
@@ -20,6 +31,7 @@ const ChatWrapper = () => {
   const [messages, setMessages] = useState([]);
   const scroll = useRef();
   const [loading, setLoading] = useState(false);
+  const modelRef = useRef("gemini-1.5-pro");
 
   const addMessage = async (message) => {
     setMessages((prevMessages) => [
@@ -36,7 +48,7 @@ const ChatWrapper = () => {
       },
     ]);
     setLoading(true);
-    getResponse(message)
+    getResponse(message, modelRef.current?.value)
       .then((response) => {
         setMessages((prevMessages) => [
           ...prevMessages.filter((msg) => msg.name !== "Loader"),
@@ -70,6 +82,15 @@ const ChatWrapper = () => {
 
   return (
     <>
+      <div>
+        <select ref={modelRef} className="model-select">
+          {models.map((model) => (
+            <option key={model.value} value={model.value}>
+              {model.name}
+            </option>
+          ))}
+        </select>
+      </div>
       <div className="messages-wrapper">
         {messages?.map((message) => (
           <Message key={message.id} message={message} />
