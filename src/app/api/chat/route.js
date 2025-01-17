@@ -25,7 +25,7 @@ export async function POST(req) {
   ];
 
   let model = null;
-  if (modelName === "mistral-large-latest") {
+  if (modelName === "m") {
     model = new ChatMistralAI({
       model: "mistral-large-latest",
       temperature: 0,
