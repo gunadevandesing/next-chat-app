@@ -2,7 +2,11 @@ import PropTypes from "prop-types";
 
 const Message = ({ message }) => {
   return (
-    <div className={`chat-bubble`}>
+    <div
+      className={`chat-bubble ${
+        ["Loader", "AI"].includes(message.name) ? "ai" : ""
+      }`}
+    >
       {/* <img
         className="chat-bubble__left"
         src={message.avatar}

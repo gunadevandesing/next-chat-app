@@ -4,26 +4,12 @@ import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { ChatMistralAI } from "@langchain/mistralai";
 
 export async function POST(req) {
-  // const imgData = imageString;
   const body = await req.json();
   const promptMessage = body?.message || "What is NextJs?";
   const modelName = body?.modelName || "gemini-1.5-pro";
+  const imageUrls = body?.imageUrls || [];
 
-  const contents = [
-    new HumanMessage({
-      content: [
-        {
-          type: "text",
-          text: promptMessage,
-        },
-        // {
-        //   type: "image_url",
-        //   image_url: { url: imgData },
-        // },
-      ],
-    }),
-  ];
-
+  const images = [];
   let model = null;
   if (modelName === "m") {
     model = new ChatMistralAI({
@@ -35,7 +21,28 @@ export async function POST(req) {
       apiKey: process.env.GOOGLE_API_KEY,
       modelName: "gemini-1.5-pro",
     });
+
+    imageUrls.forEach((imageUrl) => {
+      images.push({
+        type: "image_url",
+        image_url: {
+          url: imageUrl,
+        },
+      });
+    });
   }
+
+  const contents = [
+    new HumanMessage({
+      content: [
+        {
+          type: "text",
+          text: promptMessage,
+        },
+        ...images,
+      ],
+    }),
+  ];
 
   // Multi-modal streaming
   const streamRes = await model.stream(contents);

@@ -14,16 +14,15 @@ const models = [
   },
 ];
 
-const getResponse = async (message, modelName) => {
+const getResponse = async (message, modelName, imageUrls) => {
   const response = await fetch(`/api/chat`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ message, modelName }),
+    body: JSON.stringify({ message, modelName, imageUrls }),
   });
   const data = await response.json();
-  console.log({ data });
   return data;
 };
 
@@ -33,7 +32,7 @@ const ChatWrapper = () => {
   const [loading, setLoading] = useState(false);
   const modelRef = useRef("g");
 
-  const addMessage = async (message) => {
+  const addMessage = async (message, imageUrls) => {
     setMessages((prevMessages) => [
       ...prevMessages,
       {
@@ -48,7 +47,11 @@ const ChatWrapper = () => {
       },
     ]);
     setLoading(true);
-    getResponse(message, modelRef.current?.value)
+    getResponse(
+      message,
+      modelRef.current?.value,
+      Array.isArray(imageUrls) ? imageUrls : []
+    )
       .then((response) => {
         setMessages((prevMessages) => [
           ...prevMessages.filter((msg) => msg.name !== "Loader"),
@@ -82,7 +85,7 @@ const ChatWrapper = () => {
 
   return (
     <>
-      <div>
+      <div className="model-select-wrapper">
         <select ref={modelRef} className="model-select">
           {models.map((model) => (
             <option key={model.value} value={model.value}>
@@ -93,10 +96,9 @@ const ChatWrapper = () => {
       </div>
       <div className="messages-wrapper">
         {messages?.map((message) => (
-          <Message key={message.id} message={message} />
+          <Message key={message.name + message.id} message={message} />
         ))}
       </div>
-      {/* when a new message enters the chat, the screen scrolls down to the scroll div */}
       <span ref={scroll}></span>
       <SendMessage scroll={scroll} addMessage={addMessage} loading={loading} />
     </>
