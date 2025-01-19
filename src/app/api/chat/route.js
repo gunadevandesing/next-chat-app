@@ -1,11 +1,12 @@
 // import { imageString } from "../../../data/imagestring.js";
-import { HumanMessage } from "@langchain/core/messages";
+import { AIMessage, HumanMessage } from "@langchain/core/messages";
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { ChatMistralAI } from "@langchain/mistralai";
 
 export async function POST(req) {
   const body = await req.json();
   const promptMessage = body?.message || "What is NextJs?";
+  const prevMessages = body?.messages || [];
   const modelName = body?.modelName || "gemini-1.5-pro";
   const imageUrls = body?.imageUrls || [];
 
@@ -32,7 +33,36 @@ export async function POST(req) {
     });
   }
 
+  const prevConversation = [];
+  prevMessages.forEach((msg) => {
+    if (msg.name === "User") {
+      prevConversation.push(
+        new HumanMessage({
+          content: [
+            {
+              type: "text",
+              text: msg.text,
+            },
+          ],
+        })
+      );
+    }
+    if (msg.name === "AI") {
+      prevConversation.push(
+        new AIMessage({
+          content: [
+            {
+              type: "text",
+              text: msg.text,
+            },
+          ],
+        })
+      );
+    }
+  });
+
   const contents = [
+    ...prevConversation,
     new HumanMessage({
       content: [
         {

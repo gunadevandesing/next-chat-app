@@ -14,13 +14,13 @@ const models = [
   },
 ];
 
-const getResponse = async (message, modelName, imageUrls) => {
+const getResponse = async (message, modelName, imageUrls, messages) => {
   const response = await fetch(`/api/chat`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ message, modelName, imageUrls }),
+    body: JSON.stringify({ message, modelName, imageUrls, messages }),
   });
   const data = await response.json();
   return data;
@@ -50,7 +50,8 @@ const ChatWrapper = () => {
     getResponse(
       message,
       modelRef.current?.value,
-      Array.isArray(imageUrls) ? imageUrls : []
+      Array.isArray(imageUrls) ? imageUrls : [],
+      messages
     )
       .then((response) => {
         setMessages((prevMessages) => [
