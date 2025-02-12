@@ -12,10 +12,12 @@
     "@langchain/core": "^0.3.27",
     "@langchain/google-genai": "^0.1.6",
     "@langchain/mistralai": "^0.2.0",
+    "bootstrap": "^5.3.3",
     "dompurify": "^3.2.3",
     "markdown-it": "^14.1.0",
     "next": "15.1.4",
     "react": "^19.0.0",
+    "react-bootstrap": "^2.10.7",
     "react-dom": "^19.0.0",
     "uuid": "^11.0.5"
   },

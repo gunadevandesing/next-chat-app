@@ -2,6 +2,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import Message from "./Message";
 import SendMessage from "./SendMessage";
+import AttachFileModal from "../common/ModalComponent/AttachFileModal";
 
 const models = [
   {
@@ -28,9 +29,14 @@ const getResponse = async (message, modelName, imageUrls, messages) => {
 
 const ChatWrapper = () => {
   const [messages, setMessages] = useState([]);
+  const [selectedImages, setSelectedImages] = useState([]);
   const scroll = useRef();
   const [loading, setLoading] = useState(false);
   const modelRef = useRef("g");
+
+  const [modal, setModal] = useState({
+    open: false,
+  });
 
   const addMessage = async (message, imageUrls) => {
     setMessages((prevMessages) => [
@@ -79,6 +85,26 @@ const ChatWrapper = () => {
       });
   };
 
+  const handleImageChange = (event) => {
+    const files = Array.from(event.target.files); // Convert FileList to array
+
+    const existingImages = [...selectedImages];
+    const urls = [];
+    files.forEach((file) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        urls.push(reader.result);
+        // Update previewUrls only after all files are read
+        if (urls.length === files.length) {
+          existingImages.push(...urls);
+
+          setSelectedImages(existingImages);
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
   useEffect(() => {
     if (messages.length > 0)
       scroll.current.scrollIntoView({ behavior: "smooth" });
@@ -101,7 +127,27 @@ const ChatWrapper = () => {
         ))}
       </div>
       <span ref={scroll}></span>
-      <SendMessage scroll={scroll} addMessage={addMessage} loading={loading} />
+      <SendMessage
+        scroll={scroll}
+        addMessage={addMessage}
+        loading={loading}
+        modal={modal}
+        setModal={setModal}
+        selectedImages={selectedImages}
+        setSelectedImages={setSelectedImages}
+      />
+
+      {modal.open && (
+        <AttachFileModal
+          show={modal.open}
+          handleClose={() =>
+            setModal((prevState) => ({ ...prevState, open: false }))
+          }
+          handleImageChange={handleImageChange}
+          selectedImages={selectedImages}
+          setSelectedImages={setSelectedImages}
+        />
+      )}
     </>
   );
 };

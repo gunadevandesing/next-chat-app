@@ -1,0 +1,46 @@
+.image-preview-grid {
+  display: grid;
+  justify-content: center;
+}
+
+.image-preview-grid.has-images {
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  grid-gap: 10px;
+  margin-top: 10px;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.image-preview {
+  position: relative;
+  width: 100%;
+  height: 100px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.add-image {
+  height: 100px;
+  width: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  border: 1px dashed #606060;
+  border-radius: 10px;
+  cursor: pointer;
+  background-color: #f0f0f0;
+}
+
+.remove-image {
+  position: absolute;
+  right: 10px;
+  display: block;
+}
+
+.image-preview:hover .remove-image {
+  display: block;
+  z-index: 1;
+}

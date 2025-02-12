@@ -1,13 +1,19 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
+import { Badge } from "react-bootstrap";
 import PropTypes from "prop-types";
 import SendIcon from "../../icons/SendIcon";
 import AddIcon from "../../icons/AddIcon";
 import "./SendMessage.css";
 
-const SendMessage = ({ addMessage, loading }) => {
+const SendMessage = ({
+  addMessage,
+  loading,
+  modal,
+  setModal,
+  selectedImages,
+  setSelectedImages,
+}) => {
   const [message, setMessage] = useState("");
-  const [selectedImages, setSelectedImages] = useState([]);
-  const imageRef = useRef(null);
 
   const sendMessage = async (event) => {
     event.preventDefault();
@@ -21,46 +27,23 @@ const SendMessage = ({ addMessage, loading }) => {
     setSelectedImages([]);
   };
 
-  const handleImageChange = (event) => {
-    const files = Array.from(event.target.files); // Convert FileList to array
-    setSelectedImages(files);
-
-    const urls = [];
-    files.forEach((file) => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        urls.push(reader.result);
-        // Update previewUrls only after all files are read
-        if (urls.length === files.length) {
-          setSelectedImages(urls);
-        }
-      };
-      reader.readAsDataURL(file);
-    });
-  };
-
-  const handleButtonClick = () => {
-    imageRef.current.click();
+  const handleAttachModal = () => {
+    setModal((prevState) => ({ ...prevState, open: true }));
   };
 
   return (
     <form onSubmit={(event) => sendMessage(event)} className="send-message">
       <div className="messageBox">
         <div className="fileUploadWrapper">
-          <label htmlFor="file">
-            <AddIcon onClick={handleButtonClick} />
-            <span className="tooltip">Add an image</span>
+          <label onClick={handleAttachModal}>
+            <AddIcon />
+            {selectedImages.length > 0 && (
+              <Badge className="mx-1" pill bg="light" text="dark">
+                {selectedImages.length < 10 ? selectedImages.length : "9+"}
+              </Badge>
+            )}
+            <span className="tooltip">Add image</span>
           </label>
-          <input
-            name="file"
-            id="file"
-            type="file"
-            accept="image/*"
-            multiple
-            onChange={handleImageChange}
-            hidden
-            ref={imageRef}
-          />
         </div>
         <input
           id="messageInput"
