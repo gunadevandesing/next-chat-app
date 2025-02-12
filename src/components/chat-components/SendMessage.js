@@ -8,7 +8,7 @@ import "./SendMessage.css";
 const SendMessage = ({
   addMessage,
   loading,
-  modal,
+  // modal,
   setModal,
   selectedImages,
   setSelectedImages,
