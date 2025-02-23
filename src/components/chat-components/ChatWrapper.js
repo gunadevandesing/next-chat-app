@@ -14,6 +14,12 @@ const models = [
     value: "m",
   },
 ];
+if (process.env.NODE_ENV === "development") {
+  models.push({
+    name: "Model 3",
+    value: "o",
+  });
+}
 
 const getResponse = async (message, modelName, imageUrls, messages) => {
   const response = await fetch(`/api/chat`, {

@@ -2,6 +2,7 @@
 import { AIMessage, HumanMessage } from "@langchain/core/messages";
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { ChatMistralAI } from "@langchain/mistralai";
+import { ChatOllama } from "@langchain/ollama";
 
 export async function POST(req) {
   const body = await req.json();
@@ -17,6 +18,15 @@ export async function POST(req) {
       model: "mistral-large-latest",
       temperature: 0,
     });
+  } else if (modelName === "o") {
+    imageUrls.forEach((imageUrl) => {
+      images.push(imageUrl.split(",")[1]);
+    });
+    model = new ChatOllama({
+      model: "llava",
+      temperature: 0,
+      maxRetries: 2,
+    }).bind({ images });
   } else {
     model = new ChatGoogleGenerativeAI({
       apiKey: process.env.GOOGLE_API_KEY,
@@ -74,6 +84,15 @@ export async function POST(req) {
     }),
   ];
 
+  // if (modelName === "o") {
+  //   console.log({ images });
+  //   const response = await model.invoke(
+  //     contents
+  //     // "Extract text from the image and return the extracted text as a response, ignore the personal information. Also consider only the portion that is in eglish and ignore other languages."
+  //   );
+
+  //   return Response.json({ response: response });
+  // }
   // Multi-modal streaming
   const streamRes = await model.stream(contents);
 
