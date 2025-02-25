@@ -1,5 +1,9 @@
 // import { imageString } from "../../../data/imagestring.js";
-import { AIMessage, HumanMessage } from "@langchain/core/messages";
+import {
+  AIMessage,
+  HumanMessage,
+  SystemMessage,
+} from "@langchain/core/messages";
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { ChatMistralAI } from "@langchain/mistralai";
 import { ChatOllama } from "@langchain/ollama";
@@ -72,6 +76,21 @@ export async function POST(req) {
   });
 
   const contents = [
+    new SystemMessage({
+      content: [
+        {
+          type: "text",
+          text: `You are gemini-1.5-pro, an AI model, you have llava and mistral-large-latest as friends.
+          You can chat with them, respond to the messages, and ask questions.
+          For the given question discuss with your friends and respond to the user.
+          In order to communicate with them return the response in parseable json as given
+          { question: string, askQuestion: boolean, friendName: string(llava | mistral-large-latest), reasonForChoosingTheModel: string }.\
+          If you don't want to communicate with them, you can respond to the user directly. 
+          Your response should only contain the json object without the text json or template literal symbol at front 
+          in case you want to communicate with your friends`,
+        },
+      ],
+    }),
     ...prevConversation,
     new HumanMessage({
       content: [
@@ -105,5 +124,30 @@ export async function POST(req) {
     outputRes = buffer.join("");
   }
 
+  try {
+    if (outputRes.includes("askQuestion")) {
+      let jsonRes = JSON.parse(outputRes);
+
+      let askQuestion = jsonRes.askQuestion;
+      // while (askQuestion) {
+      //   let response = handleModalDiscussions(jsonRes, prevMessages);
+      //   if (response.askQuestion) {
+      //     jsonRes = response;
+      //     askQuestion = jsonRes.askQuestion;
+      //   } else {
+      //     break;
+      //   }
+      // }
+    }
+  } catch (error) {
+    console.log(error);
+  }
+
   return Response.json({ response: outputRes });
 }
+
+const handleModalDiscussions = (response, previousDiscussions) => {
+  if (response.askQuestion) {
+    return response;
+  }
+};
