@@ -19,12 +19,16 @@ const runAgent = async (topic) => {
     checkpointSaver: agentCheckpointer,
   });
 
+  //create random thread id
+  const thread_id = Math.random().toString(36).substring(7);
+
+  console.log({ thread_id, topic });
   // Now it's time to use!
   const agentFinalState = await agent.invoke(
     {
       messages: [new HumanMessage("Get the latest news about " + topic)],
     },
-    { configurable: { thread_id: "42" } }
+    { configurable: { thread_id } }
   );
 
   const firstResult =
@@ -36,7 +40,7 @@ const runAgent = async (topic) => {
         new HumanMessage("Provide summary about each result in 20 words each"),
       ],
     },
-    { configurable: { thread_id: "42" } }
+    { configurable: { thread_id } }
   );
 
   const secondResult =

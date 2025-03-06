@@ -88,7 +88,7 @@ const ChatWrapper = () => {
           />
         ) : (
           <>
-            {/* {qNA?.answer && (
+            {qNA?.answer && (
               <Message
                 key={"answer"}
                 message={{
@@ -96,7 +96,7 @@ const ChatWrapper = () => {
                   text: qNA.answer,
                 }}
               />
-            )} */}
+            )}
             {qNA?.summary && (
               <Message
                 key={"summary"}
