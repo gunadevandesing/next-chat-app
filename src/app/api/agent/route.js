@@ -26,7 +26,11 @@ const runAgent = async (topic) => {
   // Now it's time to use!
   const agentFinalState = await agent.invoke(
     {
-      messages: [new HumanMessage("Get the latest news about " + topic)],
+      messages: [
+        new HumanMessage(
+          "Get the latest news from key sources about the topic '" + topic + "'"
+        ),
+      ],
     },
     { configurable: { thread_id } }
   );
@@ -37,7 +41,11 @@ const runAgent = async (topic) => {
   const agentNextState = await agent.invoke(
     {
       messages: [
-        new HumanMessage("Provide summary about each result in 20 words each"),
+        new HumanMessage(
+          "Create a mock Grade B exam questions based on the topic '" +
+            topic +
+            "' and the information you found."
+        ),
       ],
     },
     { configurable: { thread_id } }

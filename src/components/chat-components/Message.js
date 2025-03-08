@@ -20,10 +20,7 @@ const Message = ({ message }) => {
       ) : (
         <div>
           <p className="user-name">{message.name}</p>
-          <p
-            className="user-message"
-            dangerouslySetInnerHTML={{ __html: message.text }}
-          ></p>
+          <pre className="user-message">{message.text}</pre>
         </div>
       )}
     </div>

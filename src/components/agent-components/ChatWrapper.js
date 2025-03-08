@@ -44,6 +44,7 @@ const ChatWrapper = () => {
           answer: response.firstResult,
           summary: response.secondResult,
         }));
+        setMessage("");
       })
       .catch((error) => {
         console.error(error);
