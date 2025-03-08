@@ -11,7 +11,7 @@ const getResponse = async (message) => {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ message }),
+    body: JSON.stringify({ topic: message }),
   });
   const data = await response.json();
   return data;
