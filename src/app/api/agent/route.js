@@ -8,7 +8,7 @@ import { createReactAgent } from "@langchain/langgraph/prebuilt";
 
 const runAgent = async (topic) => {
   // Define the tools for the agent to use
-  const agentTools = [new TavilySearchResults({ maxResults: 3 })];
+  const agentTools = [new TavilySearchResults({ maxResults: 10 })];
   const agentModel = new ChatMistralAI({ temperature: 0 });
 
   // Initialize memory to persist state between graph runs
@@ -42,7 +42,7 @@ const runAgent = async (topic) => {
     {
       messages: [
         new HumanMessage(
-          "Create a mock Grade B exam questions based on the topic '" +
+          "Create mock Grade B exam questions based on the topic '" +
             topic +
             "' and the information you found."
         ),

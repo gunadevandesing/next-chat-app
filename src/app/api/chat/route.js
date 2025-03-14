@@ -8,7 +8,7 @@ export async function POST(req) {
   const body = await req.json();
   const promptMessage = body?.message || "What is NextJs?";
   const prevMessages = body?.messages || [];
-  const modelName = body?.modelName || "gemini-1.5-pro";
+  const modelName = body?.modelName || "gemini-1.5-pro-002";
   const imageUrls = body?.imageUrls || [];
 
   const images = [];
@@ -30,7 +30,7 @@ export async function POST(req) {
   } else {
     model = new ChatGoogleGenerativeAI({
       apiKey: process.env.GOOGLE_API_KEY,
-      modelName: "gemini-1.5-pro",
+      modelName: "gemini-1.5-pro-002",
     });
 
     imageUrls.forEach((imageUrl) => {
